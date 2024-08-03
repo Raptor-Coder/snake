@@ -50,3 +50,51 @@
     <label for="boardColor2">Board Color 2:</label>
     <input type="color" id="boardColor2" value="#e0e0e0">
   </div>
+<div>
+    <label for="gridSize">Grid Size:</label>
+    <select id="gridSize">
+      <option value="10">10x10</option>
+      <option value="15">15x15</option>
+      <option value="20" selected>20x20</option>
+      <option value="25">25x25</option>
+    </select>
+  </div>
+  <button id="startButton">Start Game</button>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const startButton = document.getElementById('startButton');
+const snakeColorInput = document.getElementById('snakeColor');
+const appleColorInput = document.getElementById('appleColor');
+const boardColor1Input = document.getElementById('boardColor1');
+const boardColor2Input = document.getElementById('boardColor2');
+const gridSizeSelect = document.getElementById('gridSize');
+
+let snake, apple, direction, gridSize, cellSize, gameLoop;
+
+function initGame() {
+  gridSize = parseInt(gridSizeSelect.value);
+  cellSize = canvas.width / gridSize;
+  snake = [{ x: 10, y: 10 }];
+  apple = getRandomPosition();
+  direction = { x: 0, y: 0 };
+  clearInterval(gameLoop);
+  gameLoop = setInterval(update, 100);
+  draw(); // Draw initial state
+}
+
+function update() {
+  moveSnake();
+  if (checkCollision()) {
+    clearInterval(gameLoop);
+    alert('Game Over!');
+    return;
+  }
+  if (snake[0].x === apple.x && snake[0].y === apple.y) {
+    snake.push({});
+    apple = getRandomPosition();
+  }
+  draw();
+}
